@@ -1,0 +1,344 @@
+{
+  "last_node_id": 5,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "PromptWeightCurveEditor",
+      "pos": [
+        200,
+        250
+      ],
+      "size": {
+        "0": 600,
+        "1": 450
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "formatted_prompts",
+          "type": "STRING",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "prompts_json",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "title": "提示词权重曲线编辑器",
+      "properties": {
+        "Node name for S&R": "PromptWeightCurveEditor"
+      },
+      "widgets_values": [
+        30,
+        "[\n  {\n    \"prompt\": \"蓝天\",\n    \"points\": [\n      [\n        0,\n        0.5\n      ],\n      [\n        1,\n        1.5\n      ]\n    ],\n    \"curve_type\": \"bezier\",\n    \"visible\": true,\n    \"color\": \"#3498db\"\n  },\n  {\n    \"prompt\": \"白云\",\n    \"points\": [\n      [\n        0,\n        1.0\n      ],\n      [\n        1,\n        0.5\n      ]\n    ],\n    \"curve_type\": \"bezier\",\n    \"visible\": true,\n    \"color\": \"#e74c3c\"\n  },\n  {\n    \"prompt\": \"山脉\",\n    \"points\": [\n      [\n        0,\n        0.2\n      ],\n      [\n        0.5,\n        1.2\n      ],\n      [\n        1,\n        0.5\n      ]\n    ],\n    \"curve_type\": \"bezier\",\n    \"visible\": true,\n    \"color\": \"#2ecc71\"\n  }\n]",
+        0
+      ]
+    },
+    {
+      "id": 2,
+      "type": "KSamplerAdvanced",
+      "pos": [
+        850,
+        250
+      ],
+      "size": {
+        "0": 315,
+        "1": 530
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 4
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 6
+        },
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "noise_seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": []
+        }
+      ],
+      "title": "KSamplerAdvanced",
+      "properties": {
+        "Node name for S&R": "KSamplerAdvanced"
+      },
+      "widgets_values": [
+        758859623199808,
+        "randomize",
+        25,
+        8,
+        "euler",
+        "normal",
+        1,
+        "enable",
+        false,
+        512,
+        512,
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        550,
+        200
+      ],
+      "size": {
+        "0": 210,
+        "1": 90
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 1,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "default": "masterpiece, high quality"
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "title": "正向提示词",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      }
+    },
+    {
+      "id": 4,
+      "type": "CLIPTextEncode",
+      "pos": [
+        550,
+        350
+      ],
+      "size": {
+        "0": 210,
+        "1": 90
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "default": "bad, low quality, worst quality"
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "title": "负向提示词",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "模糊, 低质量, 最差质量, 畸变, 裁剪, pixelated"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        200,
+        100
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": []
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "dreamshaper_8.safetensors"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "EmptyLatentImage",
+      "pos": [
+        550,
+        500
+      ],
+      "size": {
+        "0": 210,
+        "1": 110
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      1,
+      "STRING"
+    ],
+    [
+      3,
+      3,
+      0,
+      2,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      4,
+      4,
+      0,
+      2,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      5,
+      5,
+      0,
+      2,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      6,
+      0,
+      2,
+      3,
+      "LATENT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+} 
